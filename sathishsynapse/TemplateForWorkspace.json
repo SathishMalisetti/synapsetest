@@ -9,7 +9,8 @@
 		},
 		"sathishsynapse-WorkspaceDefaultSqlServer_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'sathishsynapse-WorkspaceDefaultSqlServer'"
+			"metadata": "Secure string for 'connectionString' of 'sathishsynapse-WorkspaceDefaultSqlServer'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:sathishsynapse.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
 		"sathishsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"type": "string",
@@ -250,7 +251,8 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										}
+										},
+										"DeltaFormatInvalidMessages": []
 									},
 									{
 										"Name": "currency",
@@ -263,7 +265,22 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										}
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "test",
+										"Description": "",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 256,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
 									}
 								],
 								"Format": {
@@ -274,8 +291,8 @@
 									"Properties": {
 										"path": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database1/Currency",
 										"delimiter": ",",
-										"firstRowAsHeader": "false",
 										"multiLine": "false",
+										"firstRowAsHeader": "false",
 										"serialization.format": "1",
 										"escape": "\\",
 										"quote": "\"",

@@ -6,7 +6,7 @@
 			"value": "sathishsynapse"
 		},
 		"sathishsynapse-WorkspaceDefaultSqlServer_connectionString": {
-			"value": ""
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:sathishsynapse.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
 		"sathishsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://sathishstoragesftp.dfs.core.windows.net"
