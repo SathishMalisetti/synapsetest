@@ -282,6 +282,20 @@
 											}
 										},
 										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "test2",
+										"Description": "",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Length": 256,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
 									}
 								],
 								"Format": {
