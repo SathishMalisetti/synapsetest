@@ -153,7 +153,8 @@
 					"scriptLines": [
 						"source(output(",
 						"          Sno as string,",
-						"          currency as string",
+						"          currency as string,",
+						"          test as string",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
