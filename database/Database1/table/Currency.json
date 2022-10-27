@@ -45,7 +45,21 @@
 					"Description": "",
 					"OriginDataTypeName": {
 						"TypeName": "string",
+						"IsComplexType": false,
 						"IsNullable": true,
+						"Length": 256,
+						"Properties": {
+							"HIVE_TYPE_STRING": "string"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "test2",
+					"Description": "",
+					"OriginDataTypeName": {
+						"TypeName": "string",
+						"IsNullable": false,
 						"IsComplexType": false,
 						"Length": 256,
 						"Properties": {
