@@ -24,6 +24,9 @@
 			"transformations": [
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -41,8 +44,9 @@
 				"     limit: 100,",
 				"     ignoreNoFilesFound: false,",
 				"     documentForm: 'arrayOfDocuments') ~> source1",
-				"source1 derive(derviedTS = toTimestamp(toLong(toString(Date)),'yyyy-MM-dd HH:mm:ss')) ~> derivedColumn1",
-				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"source1 derive(derviedTS = toLong(substring(Date,1,13))) ~> derivedColumn1",
+				"derivedColumn1 derive(Derv2 = toTimestamp(derviedTS)) ~> derivedColumn2",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          firstName as string,",
