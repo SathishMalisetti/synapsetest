@@ -7,10 +7,18 @@
 			"metadata": "Workspace name",
 			"defaultValue": "sathishsynapse"
 		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
+		},
 		"sathishsynapse-WorkspaceDefaultSqlServer_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sathishsynapse-WorkspaceDefaultSqlServer'",
 			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:sathishsynapse.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://sathishstoragesftp.dfs.core.windows.net/"
 		},
 		"sathishsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"type": "string",
@@ -21,6 +29,305 @@
 		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/Pipeline 1')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['firstName']"
+										},
+										"sink": {
+											"name": "firstName"
+										}
+									},
+									{
+										"source": {
+											"path": "$['lastName']"
+										},
+										"sink": {
+											"name": "lastName"
+										}
+									},
+									{
+										"source": {
+											"path": "$['gender']"
+										},
+										"sink": {
+											"name": "gender"
+										}
+									},
+									{
+										"source": {
+											"path": "$['age']"
+										},
+										"sink": {
+											"name": "age"
+										}
+									},
+									{
+										"source": {
+											"path": "$['address']['streetAddress']"
+										},
+										"sink": {
+											"name": "streetAddress"
+										}
+									},
+									{
+										"source": {
+											"path": "$['address']['city']"
+										},
+										"sink": {
+											"name": "city"
+										}
+									},
+									{
+										"source": {
+											"path": "$['address']['state']"
+										},
+										"sink": {
+											"name": "state"
+										}
+									},
+									{
+										"source": {
+											"path": "$['phoneNumbers'][0]['type']"
+										},
+										"sink": {
+											"name": "type"
+										}
+									},
+									{
+										"source": {
+											"path": "$['phoneNumbers'][0]['number']"
+										},
+										"sink": {
+											"name": "number"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Json2",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Parquet1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/Json2')]",
+				"[concat(variables('workspaceId'), '/datasets/Parquet1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Pipeline 2')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['firstName']"
+										},
+										"sink": {
+											"name": "firstName"
+										}
+									},
+									{
+										"source": {
+											"path": "$['lastName']"
+										},
+										"sink": {
+											"name": "lastName"
+										}
+									},
+									{
+										"source": {
+											"path": "$['gender']"
+										},
+										"sink": {
+											"name": "gender"
+										}
+									},
+									{
+										"source": {
+											"path": "$['age']"
+										},
+										"sink": {
+											"name": "age"
+										}
+									},
+									{
+										"source": {
+											"path": "$['Date']"
+										},
+										"sink": {
+											"name": "Date",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"path": "$['address']['streetAddress']"
+										},
+										"sink": {
+											"name": "streetAddress"
+										}
+									},
+									{
+										"source": {
+											"path": "$['address']['city']"
+										},
+										"sink": {
+											"name": "city"
+										}
+									},
+									{
+										"source": {
+											"path": "$['address']['state']"
+										},
+										"sink": {
+											"name": "state"
+										}
+									},
+									{
+										"source": {
+											"path": "$['phoneNumbers'][0]['type']"
+										},
+										"sink": {
+											"name": "type"
+										}
+									},
+									{
+										"source": {
+											"path": "$['phoneNumbers'][0]['number']"
+										},
+										"sink": {
+											"name": "number"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Json3",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Parquet2",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/Json3')]",
+				"[concat(variables('workspaceId'), '/datasets/Parquet2')]"
+			]
+		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/DelimitedText1')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
@@ -64,6 +371,253 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/sathishsynapse-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Json2')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "sample2.json",
+						"fileSystem": "inputfiles"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"firstName": {
+							"type": "string"
+						},
+						"lastName": {
+							"type": "string"
+						},
+						"gender": {
+							"type": "string"
+						},
+						"age": {
+							"type": "integer"
+						},
+						"address": {
+							"type": "object",
+							"properties": {
+								"streetAddress": {
+									"type": "string"
+								},
+								"city": {
+									"type": "string"
+								},
+								"state": {
+									"type": "string"
+								}
+							}
+						},
+						"phoneNumbers": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"type": {
+										"type": "string"
+									},
+									"number": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Json3')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "sample3.json",
+						"fileSystem": "inputfiles"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"firstName": {
+							"type": "string"
+						},
+						"lastName": {
+							"type": "string"
+						},
+						"gender": {
+							"type": "string"
+						},
+						"age": {
+							"type": "integer"
+						},
+						"Date": {
+							"type": "string"
+						},
+						"address": {
+							"type": "object",
+							"properties": {
+								"streetAddress": {
+									"type": "string"
+								},
+								"city": {
+									"type": "string"
+								},
+								"state": {
+									"type": "string"
+								}
+							}
+						},
+						"phoneNumbers": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"type": {
+										"type": "string"
+									},
+									"number": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Parquet1')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "output"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Parquet2')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "output"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "firstName",
+						"type": "UTF8"
+					},
+					{
+						"name": "lastName",
+						"type": "UTF8"
+					},
+					{
+						"name": "gender",
+						"type": "UTF8"
+					},
+					{
+						"name": "age",
+						"type": "INT64"
+					},
+					{
+						"name": "streetAddress",
+						"type": "UTF8"
+					},
+					{
+						"name": "city",
+						"type": "UTF8"
+					},
+					{
+						"name": "state",
+						"type": "UTF8"
+					},
+					{
+						"name": "type",
+						"type": "UTF8"
+					},
+					{
+						"name": "number",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AzureDataLakeStorage1')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
 			]
 		},
 		{
@@ -254,8 +808,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "currency",
@@ -268,8 +821,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "test",
@@ -282,8 +834,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "test2",
@@ -296,8 +847,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "test3",
@@ -310,8 +860,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "test4",
@@ -324,8 +873,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -336,8 +884,8 @@
 									"Properties": {
 										"path": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database1/Currency",
 										"delimiter": ",",
-										"multiLine": "false",
 										"firstRowAsHeader": "false",
+										"multiLine": "false",
 										"serialization.format": "1",
 										"escape": "\\",
 										"quote": "\"",
@@ -405,8 +953,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectName",
@@ -423,8 +970,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectName"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectDescription",
@@ -441,8 +987,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectDescription"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectTypeId",
@@ -458,8 +1003,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectTypeId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectPlannedStartTimestamp",
@@ -476,8 +1020,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectPlannedStartTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectPlannedEndTimestamp",
@@ -494,8 +1037,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectPlannedEndTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectEarliestStartTimestamp",
@@ -512,8 +1054,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectEarliestStartTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectEarliestEndTimestamp",
@@ -530,8 +1071,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectEarliestEndTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectLatestStartTimestamp",
@@ -548,8 +1088,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectLatestStartTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectLatestEndTimestamp",
@@ -566,8 +1105,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectLatestEndTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectClosingTimestamp",
@@ -584,8 +1122,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectClosingTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectRiskAssessmentStatement",
@@ -602,8 +1139,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectRiskAssessmentStatement"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectWorkStatement",
@@ -620,8 +1156,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectWorkStatement"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectCharterStatement",
@@ -638,8 +1173,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectCharterStatement"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "BusinessCaseStatement",
@@ -656,8 +1190,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "BusinessCaseStatement"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "LocationId",
@@ -673,8 +1206,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "LocationId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectGlAccountNumber",
@@ -691,8 +1223,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectGlAccountNumber"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ResponsibilityCenterId",
@@ -708,8 +1239,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ResponsibilityCenterId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectNote",
@@ -726,8 +1256,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectNote"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -738,8 +1267,8 @@
 									"Properties": {
 										"path": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database1/Project",
 										"delimiter": ",",
-										"multiLine": "false",
 										"firstRowAsHeader": "false",
+										"multiLine": "false",
 										"serialization.format": "1",
 										"escape": "\\",
 										"quote": "\"",
@@ -808,8 +1337,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivity.cdm.json/ProjectActivity",
 											"Name": "ProjectId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ActivityId",
@@ -825,8 +1353,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivity.cdm.json/ProjectActivity",
 											"Name": "ActivityId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ActivityName",
@@ -843,8 +1370,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivity.cdm.json/ProjectActivity",
 											"Name": "ActivityName"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ActivityDescription",
@@ -861,8 +1387,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivity.cdm.json/ProjectActivity",
 											"Name": "ActivityDescription"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ActivityPlannedStartTimestamp",
@@ -879,8 +1404,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivity.cdm.json/ProjectActivity",
 											"Name": "ActivityPlannedStartTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ActivityActualStartTimestamp",
@@ -897,8 +1421,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivity.cdm.json/ProjectActivity",
 											"Name": "ActivityActualStartTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ActivityPlannedEndTimestamp",
@@ -915,8 +1438,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivity.cdm.json/ProjectActivity",
 											"Name": "ActivityPlannedEndTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ActivityActualEndTimestamp",
@@ -933,8 +1455,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivity.cdm.json/ProjectActivity",
 											"Name": "ActivityActualEndTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "Column_1",
@@ -947,8 +1468,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -959,8 +1479,8 @@
 									"Properties": {
 										"path": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database1/ProjectActivity",
 										"delimiter": ",",
-										"multiLine": "false",
 										"firstRowAsHeader": "false",
+										"multiLine": "false",
 										"serialization.format": "1",
 										"escape": "\\",
 										"quote": "\"",
@@ -1031,6 +1551,96 @@
 				]
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Pipeline 3')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Dataflow2')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Json3",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          firstName as string,",
+						"          lastName as string,",
+						"          gender as string,",
+						"          age as integer,",
+						"          Date as string,",
+						"          address as (streetAddress as string, city as string, state as string),",
+						"          phoneNumbers as (type as string, number as string)[]",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     documentForm: 'documentPerLine') ~> source1",
+						"source1 derive() ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/Json3')]"
+			]
 		}
 	]
 }

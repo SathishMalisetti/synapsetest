@@ -5,8 +5,14 @@
 		"workspaceName": {
 			"value": "sathishsynapse"
 		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
 		"sathishsynapse-WorkspaceDefaultSqlServer_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:sathishsynapse.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://sathishstoragesftp.dfs.core.windows.net/"
 		},
 		"sathishsynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://sathishstoragesftp.dfs.core.windows.net"
