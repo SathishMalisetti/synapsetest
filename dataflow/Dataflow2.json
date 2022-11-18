@@ -1,0 +1,66 @@
+{
+	"name": "Dataflow2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Json3",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Parquet3",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          firstName as string,",
+				"          lastName as string,",
+				"          gender as string,",
+				"          age as integer,",
+				"          Date as string,",
+				"          address as (streetAddress as string, city as string, state as string),",
+				"          phoneNumbers as (type as string, number as string)[]",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'documentPerLine') ~> source1",
+				"source1 derive(derviedTS = toTimestamp(toLong(toString(Date)),'yyyy-MM-dd HH:mm:ss')) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          firstName as string,",
+				"          lastName as string,",
+				"          gender as string,",
+				"          age as long,",
+				"          streetAddress as string,",
+				"          city as string,",
+				"          state as string,",
+				"          type as string,",
+				"          number as string",
+				"     ),",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}
