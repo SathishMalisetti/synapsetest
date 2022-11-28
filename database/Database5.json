@@ -1,0 +1,23 @@
+{
+	"name": "Database5",
+	"properties": {
+		"Name": "Database5",
+		"EntityType": "DATABASE",
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"Properties": {
+			"IsSyMSCDMDatabase": true,
+			"DerivedModelDBInfo": "{\"ModelDirectives\":{\"BaseModel\":{\"Name\":\"LifeInsuranceAnnuities\",\"Version\":\"0.1.0\"}}}"
+		},
+		"Source": {
+			"Provider": "ADLS",
+			"Location": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database5",
+			"Properties": {
+				"FormatType": "csv",
+				"LinkedServiceName": "sathishsynapse-WorkspaceDefaultStorage"
+			}
+		}
+	},
+	"type": "DATABASE"
+}
