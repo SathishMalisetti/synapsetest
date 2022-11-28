@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "SQLDEST",
+						"referenceName": "DelimitedText1",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -26,7 +26,21 @@
 					"name": "pivot1"
 				},
 				{
-					"name": "MapDrifted1"
+					"name": "MapDrifted1",
+					"description": "Creates an explicit mapping for each drifted column"
+				},
+				{
+					"name": "MapDrifted2",
+					"description": "Creates an explicit mapping for each drifted column"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "select2"
 				}
 			],
 			"scriptLines": [
@@ -46,17 +60,58 @@
 				"     Avg = sum(Price),",
 				"     columnNaming: '$N$V',",
 				"     lateral: false) ~> pivot1",
-				"pivot1 derive(Year = Year) ~> MapDrifted1",
-				"pivot1 sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     format: 'table',",
+				"pivot1 derive(Avg1 = toLong(byName('Avg1')),",
+				"          Avg2 = toLong(byName('Avg2')),",
+				"          Avg3 = toLong(byName('Avg3')),",
+				"          Avg4 = toLong(byName('Avg4')),",
+				"          Avg5 = toLong(byName('Avg5')),",
+				"          Avg6 = toLong(byName('Avg6')),",
+				"          Avg7 = toLong(byName('Avg7')),",
+				"          Avg8 = toLong(byName('Avg8')),",
+				"          Avg9 = toLong(byName('Avg9')),",
+				"          Avg10 = toLong(byName('Avg10'))) ~> MapDrifted1",
+				"pivot1 derive(Yearsa = Year) ~> MapDrifted2",
+				"MapDrifted1, select2 join(Year == Yearsa,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 select(mapColumn(",
+				"          Year,",
+				"          Avg1,",
+				"          Avg2,",
+				"          Avg3,",
+				"          Avg4,",
+				"          Avg5,",
+				"          Avg6,",
+				"          Avg7,",
+				"          Avg8,",
+				"          Avg9,",
+				"          Avg10,",
+				"          Yearsa",
+				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"MapDrifted2 select(mapColumn(",
+				"          Yearsa",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          Column_1 as string,",
+				"          Column_2 as string,",
+				"          Column_3 as string,",
+				"          Column_4 as string,",
+				"          Column_5 as string,",
+				"          Column_6 as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}

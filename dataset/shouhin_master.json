@@ -1,0 +1,49 @@
+{
+	"name": "shouhin_master",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "YS商品マスタ.csv",
+				"container": "data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "分析対象",
+				"type": "String"
+			},
+			{
+				"name": "野菜生活ブランド",
+				"type": "String"
+			},
+			{
+				"name": "野菜生活ブランド2",
+				"type": "String"
+			},
+			{
+				"name": "★野菜生活ブランド3",
+				"type": "String"
+			},
+			{
+				"name": "野菜生活ブランド下野案",
+				"type": "String"
+			},
+			{
+				"name": "野菜生活ブランド色合い",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}
