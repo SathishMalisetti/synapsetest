@@ -1228,7 +1228,8 @@
 						"     databaseType: 'spark',",
 						"     format: 'table',",
 						"     database: 'Database1',",
-						"     tableName: 'pivotsink') ~> sink1"
+						"     tableName: 'pivotsink',",
+						"     recreate:true) ~> sink1"
 					]
 				}
 			},
@@ -2110,8 +2111,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectName",
@@ -2128,8 +2128,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectName"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectDescription",
@@ -2146,8 +2145,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectDescription"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectTypeId",
@@ -2163,8 +2161,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectTypeId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectPlannedStartTimestamp",
@@ -2181,8 +2178,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectPlannedStartTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectPlannedEndTimestamp",
@@ -2199,8 +2195,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectPlannedEndTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectEarliestStartTimestamp",
@@ -2217,8 +2212,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectEarliestStartTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectEarliestEndTimestamp",
@@ -2235,8 +2229,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectEarliestEndTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectLatestStartTimestamp",
@@ -2253,8 +2246,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectLatestStartTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectLatestEndTimestamp",
@@ -2271,8 +2263,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectLatestEndTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectClosingTimestamp",
@@ -2289,8 +2280,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectClosingTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectRiskAssessmentStatement",
@@ -2307,8 +2297,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectRiskAssessmentStatement"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectWorkStatement",
@@ -2325,8 +2314,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectWorkStatement"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectCharterStatement",
@@ -2343,8 +2331,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectCharterStatement"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "BusinessCaseStatement",
@@ -2361,8 +2348,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "BusinessCaseStatement"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "LocationId",
@@ -2378,8 +2364,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "LocationId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectGlAccountNumber",
@@ -2396,8 +2381,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectGlAccountNumber"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ResponsibilityCenterId",
@@ -2413,8 +2397,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ResponsibilityCenterId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectNote",
@@ -2431,8 +2414,7 @@
 										"BaseAttributeReference": {
 											"Entity": "Project.cdm.json/Project",
 											"Name": "ProjectNote"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -2443,8 +2425,8 @@
 									"Properties": {
 										"path": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database2/Project",
 										"delimiter": ",",
-										"multiLine": "false",
 										"firstRowAsHeader": "false",
+										"multiLine": "false",
 										"serialization.format": "1",
 										"escape": "\\",
 										"quote": "\"",
@@ -2513,8 +2495,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivity.cdm.json/ProjectActivity",
 											"Name": "ProjectId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ActivityId",
@@ -2530,8 +2511,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivity.cdm.json/ProjectActivity",
 											"Name": "ActivityId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ActivityName",
@@ -2548,8 +2528,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivity.cdm.json/ProjectActivity",
 											"Name": "ActivityName"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ActivityDescription",
@@ -2566,8 +2545,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivity.cdm.json/ProjectActivity",
 											"Name": "ActivityDescription"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ActivityPlannedStartTimestamp",
@@ -2584,8 +2562,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivity.cdm.json/ProjectActivity",
 											"Name": "ActivityPlannedStartTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ActivityActualStartTimestamp",
@@ -2602,8 +2579,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivity.cdm.json/ProjectActivity",
 											"Name": "ActivityActualStartTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ActivityPlannedEndTimestamp",
@@ -2620,8 +2596,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivity.cdm.json/ProjectActivity",
 											"Name": "ActivityPlannedEndTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ActivityActualEndTimestamp",
@@ -2638,8 +2613,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivity.cdm.json/ProjectActivity",
 											"Name": "ActivityActualEndTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -2650,8 +2624,8 @@
 									"Properties": {
 										"path": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database2/ProjectActivity",
 										"delimiter": ",",
-										"multiLine": "false",
 										"firstRowAsHeader": "false",
+										"multiLine": "false",
 										"serialization.format": "1",
 										"escape": "\\",
 										"quote": "\"",
@@ -2720,8 +2694,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivityTask.cdm.json/ProjectActivityTask",
 											"Name": "ProjectId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ActivityId",
@@ -2737,8 +2710,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivityTask.cdm.json/ProjectActivityTask",
 											"Name": "ActivityId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "TaskId",
@@ -2754,8 +2726,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivityTask.cdm.json/ProjectActivityTask",
 											"Name": "TaskId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ActivityTaskSequenceNumber",
@@ -2771,8 +2742,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivityTask.cdm.json/ProjectActivityTask",
 											"Name": "ActivityTaskSequenceNumber"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ActivityTaskNote",
@@ -2789,8 +2759,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectActivityTask.cdm.json/ProjectActivityTask",
 											"Name": "ActivityTaskNote"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -2801,8 +2770,8 @@
 									"Properties": {
 										"path": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database2/ProjectActivityTask",
 										"delimiter": ",",
-										"multiLine": "false",
 										"firstRowAsHeader": "false",
+										"multiLine": "false",
 										"serialization.format": "1",
 										"escape": "\\",
 										"quote": "\"",
@@ -2871,8 +2840,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectAuthorization.cdm.json/ProjectAuthorization",
 											"Name": "ProjectId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "AuthorizationLevelId",
@@ -2888,8 +2856,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectAuthorization.cdm.json/ProjectAuthorization",
 											"Name": "AuthorizationLevelId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectAuthorizationStatusTimestamp",
@@ -2906,8 +2873,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectAuthorization.cdm.json/ProjectAuthorization",
 											"Name": "ProjectAuthorizationStatusTimestamp"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "AuthorizationStatusId",
@@ -2923,8 +2889,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectAuthorization.cdm.json/ProjectAuthorization",
 											"Name": "AuthorizationStatusId"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ProjectAuthorizationNote",
@@ -2941,8 +2906,7 @@
 										"BaseAttributeReference": {
 											"Entity": "ProjectAuthorization.cdm.json/ProjectAuthorization",
 											"Name": "ProjectAuthorizationNote"
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -2953,8 +2917,8 @@
 									"Properties": {
 										"path": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database2/ProjectAuthorization",
 										"delimiter": ",",
-										"multiLine": "false",
 										"firstRowAsHeader": "false",
+										"multiLine": "false",
 										"serialization.format": "1",
 										"escape": "\\",
 										"quote": "\"",
