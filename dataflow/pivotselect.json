@@ -110,7 +110,14 @@
 				"     format: 'table',",
 				"     database: 'Database1',",
 				"     tableName: 'direct',",
-				"     recreate:true) ~> sink2"
+				"     recreate:true,",
+				"     input(",
+				"          Id as integer,",
+				"          Auhthor_id as integer,",
+				"          Price as integer,",
+				"          Edition as integer,",
+				"          Year as integer",
+				"     )) ~> sink2"
 			]
 		}
 	}
