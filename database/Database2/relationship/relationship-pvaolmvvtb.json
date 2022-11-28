@@ -1,0 +1,26 @@
+{
+	"name": "relationship-pvaolmvvtb",
+	"properties": {
+		"Name": "relationship-pvaolmvvtb",
+		"EntityType": "RELATIONSHIP",
+		"Namespace": {
+			"DatabaseName": "Database2"
+		},
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"FromTableName": "Project",
+		"ToTableName": "ProjectAuthorization",
+		"ColumnRelationshipInformations": [
+			{
+				"FromColumnName": "ProjectId",
+				"ToColumnName": "ProjectId"
+			}
+		],
+		"RelationshipType": 0,
+		"Properties": {
+			"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"Project.cdm.json/Project\",\"toEntity\":\"ProjectAuthorization.cdm.json/ProjectAuthorization\",\"joinPairs\":[{\"fromAttribute\":\"ProjectId\",\"toAttribute\":\"ProjectId\"}]}}"
+		}
+	},
+	"type": "RELATIONSHIP"
+}

@@ -1,0 +1,149 @@
+{
+	"name": "ProjectActivityTask",
+	"properties": {
+		"Name": "ProjectActivityTask",
+		"EntityType": "TABLE",
+		"Namespace": {
+			"DatabaseName": "Database2"
+		},
+		"Description": "The task(s) consolidated by or grouped by the Activity.",
+		"TableType": "EXTERNAL",
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"StorageDescriptor": {
+			"Columns": [
+				{
+					"Name": "ProjectId",
+					"Description": "The unique identifier of a Project.",
+					"BaseAttributeReference": {
+						"Entity": "ProjectActivityTask.cdm.json/ProjectActivityTask",
+						"Name": "ProjectId"
+					},
+					"OriginDataTypeName": {
+						"TypeName": "integer",
+						"IsComplexType": false,
+						"IsNullable": false,
+						"Properties": {
+							"HIVE_TYPE_STRING": "integer"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "ActivityId",
+					"Description": "The unique identifier of an Activity.",
+					"BaseAttributeReference": {
+						"Entity": "ProjectActivityTask.cdm.json/ProjectActivityTask",
+						"Name": "ActivityId"
+					},
+					"OriginDataTypeName": {
+						"TypeName": "integer",
+						"IsComplexType": false,
+						"IsNullable": false,
+						"Properties": {
+							"HIVE_TYPE_STRING": "integer"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "TaskId",
+					"Description": "The unique identifier of a Task.",
+					"BaseAttributeReference": {
+						"Entity": "ProjectActivityTask.cdm.json/ProjectActivityTask",
+						"Name": "TaskId"
+					},
+					"OriginDataTypeName": {
+						"TypeName": "integer",
+						"IsComplexType": false,
+						"IsNullable": false,
+						"Properties": {
+							"HIVE_TYPE_STRING": "integer"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "ActivityTaskSequenceNumber",
+					"Description": "The task execution sequence in the Activity.",
+					"BaseAttributeReference": {
+						"Entity": "ProjectActivityTask.cdm.json/ProjectActivityTask",
+						"Name": "ActivityTaskSequenceNumber"
+					},
+					"OriginDataTypeName": {
+						"TypeName": "integer",
+						"IsComplexType": false,
+						"IsNullable": true,
+						"Properties": {
+							"HIVE_TYPE_STRING": "integer"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "ActivityTaskNote",
+					"Description": "A note, comment or additional information regarding the activity task.",
+					"BaseAttributeReference": {
+						"Entity": "ProjectActivityTask.cdm.json/ProjectActivityTask",
+						"Name": "ActivityTaskNote"
+					},
+					"OriginDataTypeName": {
+						"TypeName": "string",
+						"IsComplexType": false,
+						"IsNullable": true,
+						"Length": 1024,
+						"Properties": {
+							"HIVE_TYPE_STRING": "string"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				}
+			],
+			"Format": {
+				"InputFormat": "org.apache.hadoop.mapred.SequenceFileInputFormat",
+				"OutputFormat": "org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat",
+				"FormatType": "csv",
+				"SerializeLib": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
+				"Properties": {
+					"path": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database2/ProjectActivityTask",
+					"delimiter": ",",
+					"multiLine": "false",
+					"firstRowAsHeader": "false",
+					"serialization.format": "1",
+					"escape": "\\",
+					"quote": "\"",
+					"FormatTypeSetToDatabaseDefault": true,
+					"header": "false"
+				}
+			},
+			"Source": {
+				"Provider": "ADLS",
+				"Location": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database2/ProjectActivityTask",
+				"Properties": {
+					"LinkedServiceName": "sathishsynapse-WorkspaceDefaultStorage",
+					"LocationSetToDatabaseDefault": true
+				}
+			},
+			"Properties": {
+				"textinputformat.record.delimiter": ",",
+				"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+				"derivedModelAttributeInfo": "{\"attributeReferences\":{\"ProjectId\":{\"entity\":\"ProjectActivityTask.cdm.json/ProjectActivityTask\",\"name\":\"ProjectId\"},\"ActivityId\":{\"entity\":\"ProjectActivityTask.cdm.json/ProjectActivityTask\",\"name\":\"ActivityId\"},\"TaskId\":{\"entity\":\"ProjectActivityTask.cdm.json/ProjectActivityTask\",\"name\":\"TaskId\"},\"ActivityTaskSequenceNumber\":{\"entity\":\"ProjectActivityTask.cdm.json/ProjectActivityTask\",\"name\":\"ActivityTaskSequenceNumber\"},\"ActivityTaskNote\":{\"entity\":\"ProjectActivityTask.cdm.json/ProjectActivityTask\",\"name\":\"ActivityTaskNote\"}}}"
+			},
+			"Compressed": false,
+			"IsStoredAsSubdirectories": false
+		},
+		"Properties": {
+			"DerivedModelEntityInfo": "{\"entityDirectives\":{\"baseEntityReference\":{\"name\":\"ProjectActivityTask\",\"path\":\"ProjectActivityTask.cdm.json/ProjectActivityTask\"},\"description\":\"The task(s) consolidated by or grouped by the Activity.\",\"primaryKey\":[\"ProjectId\",\"ActivityId\",\"TaskId\"],\"projectionInfo\":{\"attributes\":[{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"ProjectActivityTask.cdm.json/ProjectActivityTask\",\"name\":\"ProjectId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a Project.\",\"isNullable\":false,\"name\":\"ProjectId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"ProjectActivityTask.cdm.json/ProjectActivityTask\",\"name\":\"ActivityId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of an Activity.\",\"isNullable\":false,\"name\":\"ActivityId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"ProjectActivityTask.cdm.json/ProjectActivityTask\",\"name\":\"TaskId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a Task.\",\"isNullable\":false,\"name\":\"TaskId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"ProjectActivityTask.cdm.json/ProjectActivityTask\",\"name\":\"ActivityTaskSequenceNumber\"},\"dataType\":\"integer\",\"description\":\"The task execution sequence in the Activity.\",\"isNullable\":true,\"name\":\"ActivityTaskSequenceNumber\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"ProjectActivityTask.cdm.json/ProjectActivityTask\",\"name\":\"ActivityTaskNote\"},\"dataType\":\"string\",\"dataTypeLength\":1024,\"description\":\"A note, comment or additional information regarding the activity task.\",\"isNullable\":true,\"name\":\"ActivityTaskNote\"}]}}}",
+			"Description": "The task(s) consolidated by or grouped by the Activity.",
+			"DisplayFolderInfo": "{\"name\":\"Project Management\",\"colorCode\":\"#BD4B37\"}",
+			"PrimaryKeys": "ProjectId,ActivityId,TaskId",
+			"spark.sql.sources.provider": "csv",
+			"sql:IsAppendOnly": false
+		},
+		"Retention": 0,
+		"Temporary": false,
+		"IsRewriteEnabled": false
+	},
+	"type": "TABLE"
+}

@@ -1,0 +1,150 @@
+{
+	"name": "ProjectAuthorization",
+	"properties": {
+		"Name": "ProjectAuthorization",
+		"EntityType": "TABLE",
+		"Namespace": {
+			"DatabaseName": "Database2"
+		},
+		"Description": "The authorization(s) required to perform the associated Project.\n\nEx:\n- customer\n- company management\n- project manager\n- city\n- county\n- planning commission\n- clerical",
+		"TableType": "EXTERNAL",
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"StorageDescriptor": {
+			"Columns": [
+				{
+					"Name": "ProjectId",
+					"Description": "The unique identifier of a Project.",
+					"BaseAttributeReference": {
+						"Entity": "ProjectAuthorization.cdm.json/ProjectAuthorization",
+						"Name": "ProjectId"
+					},
+					"OriginDataTypeName": {
+						"TypeName": "integer",
+						"IsComplexType": false,
+						"IsNullable": false,
+						"Properties": {
+							"HIVE_TYPE_STRING": "integer"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "AuthorizationLevelId",
+					"Description": "The unique identifier of an Authorization Level.",
+					"BaseAttributeReference": {
+						"Entity": "ProjectAuthorization.cdm.json/ProjectAuthorization",
+						"Name": "AuthorizationLevelId"
+					},
+					"OriginDataTypeName": {
+						"TypeName": "integer",
+						"IsComplexType": false,
+						"IsNullable": false,
+						"Properties": {
+							"HIVE_TYPE_STRING": "integer"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "ProjectAuthorizationStatusTimestamp",
+					"Description": "The date/time when the authorization status was effective for the authorization level.",
+					"BaseAttributeReference": {
+						"Entity": "ProjectAuthorization.cdm.json/ProjectAuthorization",
+						"Name": "ProjectAuthorizationStatusTimestamp"
+					},
+					"OriginDataTypeName": {
+						"TypeName": "timestamp",
+						"IsComplexType": false,
+						"IsNullable": false,
+						"Properties": {
+							"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
+							"HIVE_TYPE_STRING": "timestamp"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "AuthorizationStatusId",
+					"Description": "The unique identifier of an Authorization Status.",
+					"BaseAttributeReference": {
+						"Entity": "ProjectAuthorization.cdm.json/ProjectAuthorization",
+						"Name": "AuthorizationStatusId"
+					},
+					"OriginDataTypeName": {
+						"TypeName": "integer",
+						"IsComplexType": false,
+						"IsNullable": true,
+						"Properties": {
+							"HIVE_TYPE_STRING": "integer"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "ProjectAuthorizationNote",
+					"Description": "A note, comment or additional information regarding the Project Authorization.",
+					"BaseAttributeReference": {
+						"Entity": "ProjectAuthorization.cdm.json/ProjectAuthorization",
+						"Name": "ProjectAuthorizationNote"
+					},
+					"OriginDataTypeName": {
+						"TypeName": "string",
+						"IsComplexType": false,
+						"IsNullable": true,
+						"Length": 1024,
+						"Properties": {
+							"HIVE_TYPE_STRING": "string"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				}
+			],
+			"Format": {
+				"InputFormat": "org.apache.hadoop.mapred.SequenceFileInputFormat",
+				"OutputFormat": "org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat",
+				"FormatType": "csv",
+				"SerializeLib": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
+				"Properties": {
+					"path": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database2/ProjectAuthorization",
+					"delimiter": ",",
+					"multiLine": "false",
+					"firstRowAsHeader": "false",
+					"serialization.format": "1",
+					"escape": "\\",
+					"quote": "\"",
+					"FormatTypeSetToDatabaseDefault": true,
+					"header": "false"
+				}
+			},
+			"Source": {
+				"Provider": "ADLS",
+				"Location": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database2/ProjectAuthorization",
+				"Properties": {
+					"LinkedServiceName": "sathishsynapse-WorkspaceDefaultStorage",
+					"LocationSetToDatabaseDefault": true
+				}
+			},
+			"Properties": {
+				"textinputformat.record.delimiter": ",",
+				"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+				"derivedModelAttributeInfo": "{\"attributeReferences\":{\"ProjectId\":{\"entity\":\"ProjectAuthorization.cdm.json/ProjectAuthorization\",\"name\":\"ProjectId\"},\"AuthorizationLevelId\":{\"entity\":\"ProjectAuthorization.cdm.json/ProjectAuthorization\",\"name\":\"AuthorizationLevelId\"},\"ProjectAuthorizationStatusTimestamp\":{\"entity\":\"ProjectAuthorization.cdm.json/ProjectAuthorization\",\"name\":\"ProjectAuthorizationStatusTimestamp\"},\"AuthorizationStatusId\":{\"entity\":\"ProjectAuthorization.cdm.json/ProjectAuthorization\",\"name\":\"AuthorizationStatusId\"},\"ProjectAuthorizationNote\":{\"entity\":\"ProjectAuthorization.cdm.json/ProjectAuthorization\",\"name\":\"ProjectAuthorizationNote\"}}}"
+			},
+			"Compressed": false,
+			"IsStoredAsSubdirectories": false
+		},
+		"Properties": {
+			"DerivedModelEntityInfo": "{\"entityDirectives\":{\"baseEntityReference\":{\"name\":\"ProjectAuthorization\",\"path\":\"ProjectAuthorization.cdm.json/ProjectAuthorization\"},\"description\":\"The authorization(s) required to perform the associated Project.\\n\\nEx:\\n- customer\\n- company management\\n- project manager\\n- city\\n- county\\n- planning commission\\n- clerical\",\"primaryKey\":[\"ProjectId\",\"AuthorizationLevelId\",\"ProjectAuthorizationStatusTimestamp\"],\"projectionInfo\":{\"attributes\":[{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"ProjectAuthorization.cdm.json/ProjectAuthorization\",\"name\":\"ProjectId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a Project.\",\"isNullable\":false,\"name\":\"ProjectId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"ProjectAuthorization.cdm.json/ProjectAuthorization\",\"name\":\"AuthorizationLevelId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of an Authorization Level.\",\"isNullable\":false,\"name\":\"AuthorizationLevelId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"ProjectAuthorization.cdm.json/ProjectAuthorization\",\"name\":\"ProjectAuthorizationStatusTimestamp\"},\"dataType\":\"timestamp\",\"description\":\"The date/time when the authorization status was effective for the authorization level.\",\"isNullable\":false,\"name\":\"ProjectAuthorizationStatusTimestamp\",\"timestampFormat\":\"YYYY-MM-DD HH:MM:SS.fffffffff\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"ProjectAuthorization.cdm.json/ProjectAuthorization\",\"name\":\"AuthorizationStatusId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of an Authorization Status.\",\"isNullable\":true,\"name\":\"AuthorizationStatusId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"ProjectAuthorization.cdm.json/ProjectAuthorization\",\"name\":\"ProjectAuthorizationNote\"},\"dataType\":\"string\",\"dataTypeLength\":1024,\"description\":\"A note, comment or additional information regarding the Project Authorization.\",\"isNullable\":true,\"name\":\"ProjectAuthorizationNote\"}]}}}",
+			"Description": "The authorization(s) required to perform the associated Project.\n\nEx:\n- customer\n- company management\n- project manager\n- city\n- county\n- planning commission\n- clerical",
+			"DisplayFolderInfo": "{\"name\":\"Project Management\",\"colorCode\":\"#BD4B37\"}",
+			"PrimaryKeys": "ProjectId,AuthorizationLevelId,ProjectAuthorizationStatusTimestamp",
+			"spark.sql.sources.provider": "csv",
+			"sql:IsAppendOnly": false
+		},
+		"Retention": 0,
+		"Temporary": false,
+		"IsRewriteEnabled": false
+	},
+	"type": "TABLE"
+}

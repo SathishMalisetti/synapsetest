@@ -1,0 +1,26 @@
+{
+	"name": "relationship-evvmxbjbzd",
+	"properties": {
+		"Name": "relationship-evvmxbjbzd",
+		"EntityType": "RELATIONSHIP",
+		"Namespace": {
+			"DatabaseName": "Database2"
+		},
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"FromTableName": "ProjectActivity",
+		"ToTableName": "ProjectActivityTask",
+		"ColumnRelationshipInformations": [
+			{
+				"FromColumnName": "ActivityId",
+				"ToColumnName": "ActivityId"
+			}
+		],
+		"RelationshipType": 0,
+		"Properties": {
+			"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"ProjectActivity.cdm.json/ProjectActivity\",\"toEntity\":\"ProjectActivityTask.cdm.json/ProjectActivityTask\",\"joinPairs\":[{\"fromAttribute\":\"ActivityId\",\"toAttribute\":\"ActivityId\"}]}}"
+		}
+	},
+	"type": "RELATIONSHIP"
+}

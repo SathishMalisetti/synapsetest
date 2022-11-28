@@ -38,9 +38,6 @@
 				},
 				{
 					"name": "select1"
-				},
-				{
-					"name": "select2"
 				}
 			],
 			"scriptLines": [
@@ -71,13 +68,13 @@
 				"          Avg9 = toLong(byName('Avg9')),",
 				"          Avg10 = toLong(byName('Avg10'))) ~> MapDrifted1",
 				"pivot1 derive(Yearsa = Year) ~> MapDrifted2",
-				"MapDrifted1, select2 join(Year == Yearsa,",
+				"MapDrifted1, MapDrifted2 join(pivot1@Year == Yearsa,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join1",
 				"join1 select(mapColumn(",
-				"          Year,",
+				"          Year = pivot1@Year,",
 				"          Avg1,",
 				"          Avg2,",
 				"          Avg3,",
@@ -92,11 +89,6 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"MapDrifted2 select(mapColumn(",
-				"          Yearsa",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select2",
 				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
