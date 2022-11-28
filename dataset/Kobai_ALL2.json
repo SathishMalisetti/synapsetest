@@ -1,13 +1,6 @@
 {
 	"name": "Kobai_ALL2",
 	"properties": {
-		"linkedServiceName": {
-			"referenceName": "kgmmsworkspace-WorkspaceDefaultSqlServer",
-			"type": "LinkedServiceReference",
-			"parameters": {
-				"DBName": "qprdb"
-			}
-		},
 		"annotations": [],
 		"type": "AzureSqlDWTable",
 		"schema": [
