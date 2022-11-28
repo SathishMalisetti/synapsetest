@@ -56,7 +56,7 @@
 				"     pivotBy(Edition),",
 				"     {} = avg(Price),",
 				"     columnNaming: '$N$V',",
-				"     lateral: true) ~> pivot1",
+				"     lateral: false) ~> pivot1",
 				"pivot1 derive(col1 = toDouble(byName('1')),",
 				"          col2 = toDouble(byName('2')),",
 				"          col3 = toDouble(byName('3')),",
