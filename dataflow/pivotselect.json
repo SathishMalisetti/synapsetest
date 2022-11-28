@@ -77,7 +77,8 @@
 				"     databaseType: 'spark',",
 				"     format: 'table',",
 				"     database: 'Database1',",
-				"     tableName: 'pivotsink') ~> sink1"
+				"     tableName: 'pivotsink',",
+				"     recreate:true) ~> sink1"
 			]
 		}
 	}
