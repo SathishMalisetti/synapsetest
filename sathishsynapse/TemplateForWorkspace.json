@@ -7,6 +7,10 @@
 			"metadata": "Workspace name",
 			"defaultValue": "sathishsynapse"
 		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
 		"AzureDataLakeStorage1_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
@@ -377,6 +381,53 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/dataflows/Dataflow2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pivotselect')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "pivotselect",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/dataflows/pivotselect')]"
 			]
 		},
 		{
@@ -778,6 +829,25 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/AzureDataLakeStorage1')]",
 			"type": "Microsoft.Synapse/workspaces/linkedServices",
 			"apiVersion": "2019-06-01-preview",
@@ -1075,6 +1145,95 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/Source')]",
 				"[concat(variables('workspaceId'), '/datasets/SQLDEST')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pivotselect')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Source",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "pivot1"
+						},
+						{
+							"name": "MapDrifted1",
+							"description": "Creates an explicit mapping for each drifted column"
+						},
+						{
+							"name": "select1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Id as integer,",
+						"          Auhthor_id as integer,",
+						"          Price as integer,",
+						"          Edition as integer,",
+						"          Year as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 pivot(groupBy(Year),",
+						"     pivotBy(Edition),",
+						"     {} = avg(Price),",
+						"     columnNaming: '$N$V',",
+						"     lateral: true) ~> pivot1",
+						"pivot1 derive(col1 = toDouble(byName('1')),",
+						"          col2 = toDouble(byName('2')),",
+						"          col3 = toDouble(byName('3')),",
+						"          col4 = toDouble(byName('4')),",
+						"          col5 = toDouble(byName('5')),",
+						"          col6 = toDouble(byName('6')),",
+						"          col7 = toDouble(byName('7')),",
+						"          col8 = toDouble(byName('8')),",
+						"          col9 = toDouble(byName('9')),",
+						"          col10 = toDouble(byName('10'))) ~> MapDrifted1",
+						"MapDrifted1 select(mapColumn(",
+						"          Year,",
+						"          col1,",
+						"          col2,",
+						"          col3,",
+						"          col4,",
+						"          col5,",
+						"          col6,",
+						"          col7,",
+						"          col8,",
+						"          col9,",
+						"          col10",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     store: 'synapse',",
+						"     databaseType: 'spark',",
+						"     format: 'table',",
+						"     database: 'Database1',",
+						"     tableName: 'pivotsink') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/Source')]"
 			]
 		},
 		{
@@ -3011,8 +3170,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -3023,8 +3181,8 @@
 									"Properties": {
 										"path": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database3/Table_1",
 										"delimiter": ",",
-										"multiLine": "false",
 										"firstRowAsHeader": "false",
+										"multiLine": "false",
 										"serialization.format": "1",
 										"escape": "\\",
 										"quote": "\"",
@@ -3117,10 +3275,6 @@
 									{
 										"Name": "BenefitCriteriaTypeId",
 										"Description": "The unique identifier of a Benefit Criteria Type.",
-										"BaseAttributeReference": {
-											"Entity": "BenefitCriteriaType.cdm.json/BenefitCriteriaType",
-											"Name": "BenefitCriteriaTypeId"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -3129,15 +3283,14 @@
 												"HIVE_TYPE_STRING": "integer"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "BenefitCriteriaType.cdm.json/BenefitCriteriaType",
+											"Name": "BenefitCriteriaTypeId"
+										}
 									},
 									{
 										"Name": "BenefitCriteriaTypeName",
 										"Description": "The name of the Benefit Criteria Type.",
-										"BaseAttributeReference": {
-											"Entity": "BenefitCriteriaType.cdm.json/BenefitCriteriaType",
-											"Name": "BenefitCriteriaTypeName"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -3147,15 +3300,14 @@
 												"HIVE_TYPE_STRING": "string"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "BenefitCriteriaType.cdm.json/BenefitCriteriaType",
+											"Name": "BenefitCriteriaTypeName"
+										}
 									},
 									{
 										"Name": "BenefitCriteriaTypeDescription",
 										"Description": "The description of the Benefit Criteria Type.",
-										"BaseAttributeReference": {
-											"Entity": "BenefitCriteriaType.cdm.json/BenefitCriteriaType",
-											"Name": "BenefitCriteriaTypeDescription"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -3165,7 +3317,10 @@
 												"HIVE_TYPE_STRING": "string"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "BenefitCriteriaType.cdm.json/BenefitCriteriaType",
+											"Name": "BenefitCriteriaTypeDescription"
+										}
 									}
 								],
 								"Format": {
@@ -3176,8 +3331,8 @@
 									"Properties": {
 										"path": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database4/BenefitCriteriaType",
 										"delimiter": ",",
-										"multiLine": "false",
 										"firstRowAsHeader": "false",
+										"multiLine": "false",
 										"serialization.format": "1",
 										"escape": "\\",
 										"quote": "\"",
@@ -3206,8 +3361,7 @@
 								"Description": "Benefit Criteria Type is a means of classifying, grouping or categorizing specific Benefit Criteria at a higher level for analysis and presentation.\n\nThe Benefit Criteria is the specific variable or value that may be linked to a Market Segment.\n\nThe Benefit Type is the larger category to which the Benefit Criteria belongs.\n\nThe following are examples:\n\nBenefit Criteria:  Long Term Appreciation\nBenefit Type:  Investment Objective\n\nBenefit Criteria:  Retirement Savings\nBenefit Type:  Investment Objective",
 								"DisplayFolderInfo": "{\"name\":\"Customer\",\"colorCode\":\"#4B003F\"}",
 								"PrimaryKeys": "BenefitCriteriaTypeId",
-								"spark.sql.sources.provider": "csv",
-								"sql:IsAppendOnly": false
+								"spark.sql.sources.provider": "csv"
 							},
 							"Retention": 0,
 							"Temporary": false,
@@ -3236,10 +3390,6 @@
 									{
 										"Name": "CustomerId",
 										"Description": "The unique identifier of a Customer.",
-										"BaseAttributeReference": {
-											"Entity": "Customer.cdm.json/Customer",
-											"Name": "CustomerId"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "long",
 											"IsComplexType": false,
@@ -3248,15 +3398,14 @@
 												"HIVE_TYPE_STRING": "long"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "Customer.cdm.json/Customer",
+											"Name": "CustomerId"
+										}
 									},
 									{
 										"Name": "CustomerEstablishedDate",
 										"Description": "The date that the Customer relationship was established.",
-										"BaseAttributeReference": {
-											"Entity": "Customer.cdm.json/Customer",
-											"Name": "CustomerEstablishedDate"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "date",
 											"IsComplexType": false,
@@ -3266,15 +3415,14 @@
 												"HIVE_TYPE_STRING": "date"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "Customer.cdm.json/Customer",
+											"Name": "CustomerEstablishedDate"
+										}
 									},
 									{
 										"Name": "CustomerTypeId",
 										"Description": "The unique identifier of a Customer Type.",
-										"BaseAttributeReference": {
-											"Entity": "Customer.cdm.json/Customer",
-											"Name": "CustomerTypeId"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -3283,15 +3431,14 @@
 												"HIVE_TYPE_STRING": "integer"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "Customer.cdm.json/Customer",
+											"Name": "CustomerTypeId"
+										}
 									},
 									{
 										"Name": "ResponsibilityCenterId",
 										"Description": "The unique identifier of a Responsibility Center.",
-										"BaseAttributeReference": {
-											"Entity": "Customer.cdm.json/Customer",
-											"Name": "ResponsibilityCenterId"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -3300,15 +3447,14 @@
 												"HIVE_TYPE_STRING": "integer"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "Customer.cdm.json/Customer",
+											"Name": "ResponsibilityCenterId"
+										}
 									},
 									{
 										"Name": "LedgerId",
 										"Description": "The unique identifier of a Ledger.",
-										"BaseAttributeReference": {
-											"Entity": "Customer.cdm.json/Customer",
-											"Name": "LedgerId"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -3317,15 +3463,14 @@
 												"HIVE_TYPE_STRING": "integer"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "Customer.cdm.json/Customer",
+											"Name": "LedgerId"
+										}
 									},
 									{
 										"Name": "LedgerAccountNumber",
 										"Description": "The unique identifier of a Ledger Account.",
-										"BaseAttributeReference": {
-											"Entity": "Customer.cdm.json/Customer",
-											"Name": "LedgerAccountNumber"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -3335,15 +3480,14 @@
 												"HIVE_TYPE_STRING": "string"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "Customer.cdm.json/Customer",
+											"Name": "LedgerAccountNumber"
+										}
 									},
 									{
 										"Name": "CustomerNote",
 										"Description": "A note, comment or additional information regarding the Customer.",
-										"BaseAttributeReference": {
-											"Entity": "Customer.cdm.json/Customer",
-											"Name": "CustomerNote"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -3353,15 +3497,14 @@
 												"HIVE_TYPE_STRING": "string"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "Customer.cdm.json/Customer",
+											"Name": "CustomerNote"
+										}
 									},
 									{
 										"Name": "PartyId",
 										"Description": "The unique identifier of a Party.",
-										"BaseAttributeReference": {
-											"Entity": "Customer.cdm.json/Customer",
-											"Name": "PartyId"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "long",
 											"IsComplexType": false,
@@ -3370,15 +3513,14 @@
 												"HIVE_TYPE_STRING": "long"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "Customer.cdm.json/Customer",
+											"Name": "PartyId"
+										}
 									},
 									{
 										"Name": "GlobalLocationNumber",
 										"Description": "The Global Location Number (GLN) is a simple tool used to uniquely identify locations. It can be used to identify physical locations such as a warehouse, legal entities, or a function / department within a legal entity. The GLN is part of the GS1 system of standards.",
-										"BaseAttributeReference": {
-											"Entity": "Customer.cdm.json/Customer",
-											"Name": "GlobalLocationNumber"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "decimal",
 											"IsComplexType": false,
@@ -3389,7 +3531,10 @@
 												"HIVE_TYPE_STRING": "decimal"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "Customer.cdm.json/Customer",
+											"Name": "GlobalLocationNumber"
+										}
 									}
 								],
 								"Format": {
@@ -3400,8 +3545,8 @@
 									"Properties": {
 										"path": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database4/Customer",
 										"delimiter": ",",
-										"multiLine": "false",
 										"firstRowAsHeader": "false",
+										"multiLine": "false",
 										"serialization.format": "1",
 										"escape": "\\",
 										"quote": "\"",
@@ -3430,8 +3575,7 @@
 								"Description": "A customer is an individual or legal entity that has or has purchased a product or service.\n\nA potential customer is an individual or legal entity that has the desire to acquire a product or service, the financial ability to pay for that product or service and is located in a location in which the product or service can be delivered to them.\n\nThe definition of 'customer' is of critical importance for every organization.    \n\nIt is the customer that is the focus of product planning, marketing, sales, service, reporting and analytics.    Without 'customer' there would be no need for the organization to exist since its purpose is to serve the customer and profit from that interaction.\n\nThe definition of 'customer' must be consistent with how customers exist and interact with the organization in the real world.  An artificial or conceptual definition of 'customer' that is not consistent with these two objectives is doomed to fail because the data will not be consistent with the definition and employees will not accept concepts or terms that are not consistent with what they see, know and how they interact with customers on a working basis.\n\nMicrosoft defines 'customer' to meet these objectives.    When we look out into the real world we see two dominant types of customers:  human beings and legal entities.     \n\nHuman beings are obviously male and female individuals of various ages, sex, demographics and a variety of similar dimensions that describe and define them who purchase products, good and services.    \n\nLegal entities are those legally-defined entities such as corporations, partnerships, non-profit organizations, government organizations etc. that purchase products, goods and services.\n\nThis view of 'customer' is consistent with the real world and consistent with how employees view and interact with customers.\n\nOf course, that is just the start of identifying, defining and understanding each type of 'customer'.     There is a great deal of detail, complexity and related data that can be used to define each type of customer to various levels of detail and different dimensions of information.\n\nMicrosoft implements these detailed concepts and related data via two distinct business area models that expand the coverage and complexity of each type of customer:\n\n-  INDIVIDUAL CUSTOMER Business Area Model\n-  LEGAL ENTITY CUSTOMER Business Area Model\n\nNote:\nEach of the Microsoft models - enterprise, business area or data warehouse - have a representative level of detail for the appropriate type of customer, which is a 'subset' of the total data available in the associated INDIVIDUAL CUSTOMER or LEGAL ENTITY CUSTOMER business area models..   Reference either of those models to expand the coverage or level of detail in each respective data model.\n\nThe actual customer implemented in each model depends upon the dominant use of customer for that industry.     \n\nFor example, in the pharmaceutical industry the customer is a legal entity, which represents another corporation, company, government organization etc. that purchases the pharmaceutical product and then distributes that product to the end-customer, which is an individual in a retail environment or a government-distribution scheme.    \n\nFor this example, the pharmaceutical models will have the legal entity customer represented but not the individual 'end customer' since that is represented in the appropriate retail industry models, which are a different offering.     \n\nOf course, the entire set of data available for a legal entity customer is contained in the associated LEGAL ENTITY CUSTOMER Business Area Model.   Reference the LEGAL ENTITY CUSTOMER Business Area Model to incorporate additional data that may be of relevance.\n\nIn many industries both types of customers are represented since a legal entity or individual can purchase products, goods or services and enter into contracts.    For these industries, both types of customers are represented by some of the more significant or relevant data derived from the associated LEGAL ENTITY or INDIVIDUAL CUSTOMER business area models.   These models can be used to expand the scope or level of detail in any of the enterprise, business area or data warehouse models.",
 								"DisplayFolderInfo": "{\"name\":\"Customer\",\"colorCode\":\"#4B003F\"}",
 								"PrimaryKeys": "CustomerId",
-								"spark.sql.sources.provider": "csv",
-								"sql:IsAppendOnly": false
+								"spark.sql.sources.provider": "csv"
 							},
 							"Retention": 0,
 							"Temporary": false,
@@ -3460,10 +3604,6 @@
 									{
 										"Name": "CustomerId",
 										"Description": "The unique identifier of a Customer.",
-										"BaseAttributeReference": {
-											"Entity": "CustomerActivity.cdm.json/CustomerActivity",
-											"Name": "CustomerId"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "long",
 											"IsComplexType": false,
@@ -3472,15 +3612,14 @@
 												"HIVE_TYPE_STRING": "long"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "CustomerActivity.cdm.json/CustomerActivity",
+											"Name": "CustomerId"
+										}
 									},
 									{
 										"Name": "ActivityId",
 										"Description": "The unique identifier of an Activity.",
-										"BaseAttributeReference": {
-											"Entity": "CustomerActivity.cdm.json/CustomerActivity",
-											"Name": "ActivityId"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -3489,15 +3628,14 @@
 												"HIVE_TYPE_STRING": "integer"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "CustomerActivity.cdm.json/CustomerActivity",
+											"Name": "ActivityId"
+										}
 									},
 									{
 										"Name": "Date",
 										"Description": "The timestamp that the associated information is reported, recorded or effective as-of.",
-										"BaseAttributeReference": {
-											"Entity": "CustomerActivity.cdm.json/CustomerActivity",
-											"Name": "Date"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "date",
 											"IsComplexType": false,
@@ -3507,15 +3645,14 @@
 												"HIVE_TYPE_STRING": "date"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "CustomerActivity.cdm.json/CustomerActivity",
+											"Name": "Date"
+										}
 									},
 									{
 										"Name": "AioLevelId",
 										"Description": "The unique identifier of an AIO Level.",
-										"BaseAttributeReference": {
-											"Entity": "CustomerActivity.cdm.json/CustomerActivity",
-											"Name": "AioLevelId"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -3524,15 +3661,14 @@
 												"HIVE_TYPE_STRING": "integer"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "CustomerActivity.cdm.json/CustomerActivity",
+											"Name": "AioLevelId"
+										}
 									},
 									{
 										"Name": "CustomerActivityNote",
 										"Description": "A note, comment or additional information related to the Activity in which the Customer participates.",
-										"BaseAttributeReference": {
-											"Entity": "CustomerActivity.cdm.json/CustomerActivity",
-											"Name": "CustomerActivityNote"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -3542,7 +3678,10 @@
 												"HIVE_TYPE_STRING": "string"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "CustomerActivity.cdm.json/CustomerActivity",
+											"Name": "CustomerActivityNote"
+										}
 									}
 								],
 								"Format": {
@@ -3553,8 +3692,8 @@
 									"Properties": {
 										"path": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database4/CustomerActivity",
 										"delimiter": ",",
-										"multiLine": "false",
 										"firstRowAsHeader": "false",
+										"multiLine": "false",
 										"serialization.format": "1",
 										"escape": "\\",
 										"quote": "\"",
@@ -3583,8 +3722,7 @@
 								"Description": "The Activity(s) that a specific Individual Customer has acknowledged was identified or recorded as of the indicated date.\n\nActivities, Interests and Opinions are the foundation of Psychographics and Psychographic Segmentation.     Activities, Interests and Opinions equate to 'lifestyle'.    Activities, Interests and Opinions (AIO) are the basis for understanding consumer buying behavior as a function of their lifestyle.\n\nActivities describe what a consumer 'does', such as occupation, hobbies, entertainment.\n\nEach organization will identify, define and track a specific set of AIO's to gather information about, define consumers and make decisions. \n\nExamples:\n\nActivity =  \"Cooking\"\nActivity Type = \"Personal Interest\"\n\nActivity =  \"Golf\"\nActivity Type = \"Personal Sports\n\nActivity =  \"Mutual Fund Investing\"\nActivity Type = \"Finance\"\n\nSales, marketing and advertising activities are often planned for or targeted at groups involved in or interested in specific activities.",
 								"DisplayFolderInfo": "{\"name\":\"Customer\",\"colorCode\":\"#4B003F\"}",
 								"PrimaryKeys": "CustomerId,ActivityId,Date",
-								"spark.sql.sources.provider": "csv",
-								"sql:IsAppendOnly": false
+								"spark.sql.sources.provider": "csv"
 							},
 							"Retention": 0,
 							"Temporary": false,
@@ -3613,10 +3751,6 @@
 									{
 										"Name": "CustomerId",
 										"Description": "The unique identifier of a Customer.",
-										"BaseAttributeReference": {
-											"Entity": "CustomerAncestry.cdm.json/CustomerAncestry",
-											"Name": "CustomerId"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "long",
 											"IsComplexType": false,
@@ -3625,15 +3759,14 @@
 												"HIVE_TYPE_STRING": "long"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "CustomerAncestry.cdm.json/CustomerAncestry",
+											"Name": "CustomerId"
+										}
 									},
 									{
 										"Name": "AncestryId",
 										"Description": "The unique identifier of an Ancestry.",
-										"BaseAttributeReference": {
-											"Entity": "CustomerAncestry.cdm.json/CustomerAncestry",
-											"Name": "AncestryId"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -3642,15 +3775,14 @@
 												"HIVE_TYPE_STRING": "integer"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "CustomerAncestry.cdm.json/CustomerAncestry",
+											"Name": "AncestryId"
+										}
 									},
 									{
 										"Name": "CustomerAncestryNote",
 										"Description": "Notes, comments or additional information regarding the Customer's ancestry.",
-										"BaseAttributeReference": {
-											"Entity": "CustomerAncestry.cdm.json/CustomerAncestry",
-											"Name": "CustomerAncestryNote"
-										},
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -3660,7 +3792,10 @@
 												"HIVE_TYPE_STRING": "string"
 											}
 										},
-										"DeltaFormatInvalidMessages": []
+										"BaseAttributeReference": {
+											"Entity": "CustomerAncestry.cdm.json/CustomerAncestry",
+											"Name": "CustomerAncestryNote"
+										}
 									}
 								],
 								"Format": {
@@ -3671,8 +3806,8 @@
 									"Properties": {
 										"path": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database4/CustomerAncestry",
 										"delimiter": ",",
-										"multiLine": "false",
 										"firstRowAsHeader": "false",
+										"multiLine": "false",
 										"serialization.format": "1",
 										"escape": "\\",
 										"quote": "\"",
@@ -3701,8 +3836,7 @@
 								"Description": "The ancestry(s) identified by or for the Customer.\n\nOne or more ethnic identifies that may be identified by the Customer.\n\nSource:  US Bureau of Census\nThis identification is based on self-identification; the data on ancestry represents self-classification by people according to the ancestry group(s) with which they most closely identify. Ancestry refers to a person's ethnic origin or descent, \"roots,\" or heritage or the place of birth of the person or the person's parents or ancestors before their arrival in the United States. Some ethnic identities, such as \"Egyptian\" or \"Polish\" can be traced to geographic areas outside the United States, while other ethnicities such as \"Pennsylvania Dutch\" or \"Cajun\" evolved in the United States. \n\nThe ancestry question allowed respondents to report one or more ancestry groups. While a large number of respondents listed a single ancestry, the majority of answers included more than one ethnic entry.\n\nThe Census Bureau accepts \"American\" as a unique ethnicity if it was given alone, with an ambiguous response, or with State names. If the respondent listed any other ethnic identity such as \"Italian American,\" generally the \"American\" portion of the response\nwas not coded. However, distinct groups such as \"American Indian,\" \"Mexican American,\" and \"African American\" were coded and identified separately because they represented groups who considered themselves different from those who reported as\n\"Indian,\" \"Mexican,\" or \"African,\" respectively.",
 								"DisplayFolderInfo": "{\"name\":\"Customer\",\"colorCode\":\"#4B003F\"}",
 								"PrimaryKeys": "CustomerId,AncestryId",
-								"spark.sql.sources.provider": "csv",
-								"sql:IsAppendOnly": false
+								"spark.sql.sources.provider": "csv"
 							},
 							"Retention": 0,
 							"Temporary": false,
