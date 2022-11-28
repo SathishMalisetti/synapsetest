@@ -408,7 +408,8 @@
 								"parameters": {},
 								"datasetParameters": {
 									"source1": {},
-									"sink1": {}
+									"sink1": {},
+									"sink2": {}
 								}
 							},
 							"staging": {},
@@ -427,7 +428,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/dataflows/pivotselect')]"
+				"[concat(variables('workspaceId'), '/dataflows/pivotselect')]",
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
 			]
 		},
 		{
@@ -1165,7 +1167,18 @@
 					],
 					"sinks": [
 						{
-							"name": "sink1"
+							"name": "sink1",
+							"rejectedDataLinkedService": {
+								"referenceName": "sathishsynapse-WorkspaceDefaultStorage",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "sink2",
+							"rejectedDataLinkedService": {
+								"referenceName": "sathishsynapse-WorkspaceDefaultStorage",
+								"type": "LinkedServiceReference"
+							}
 						}
 					],
 					"transformations": [
@@ -1229,12 +1242,21 @@
 						"     format: 'table',",
 						"     database: 'Database1',",
 						"     tableName: 'pivotsink',",
-						"     recreate:true) ~> sink1"
+						"     recreate:true) ~> sink1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     store: 'synapse',",
+						"     databaseType: 'spark',",
+						"     format: 'table',",
+						"     database: 'Database1',",
+						"     tableName: 'direct',",
+						"     recreate:true) ~> sink2"
 					]
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/Source')]"
+				"[concat(variables('workspaceId'), '/datasets/Source')]",
+				"[concat(variables('workspaceId'), '/linkedServices/sathishsynapse-WorkspaceDefaultStorage')]"
 			]
 		},
 		{
