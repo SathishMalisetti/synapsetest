@@ -103,7 +103,7 @@
 				"          col9 as double,",
 				"          col10 as double",
 				"     )) ~> sink1",
-				"source1 sink(allowSchemaDrift: true,",
+				"pivot1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     store: 'synapse',",
 				"     databaseType: 'spark',",
