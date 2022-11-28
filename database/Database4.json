@@ -1,0 +1,23 @@
+{
+	"name": "Database4",
+	"properties": {
+		"Name": "Database4",
+		"EntityType": "DATABASE",
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"Properties": {
+			"IsSyMSCDMDatabase": true,
+			"DerivedModelDBInfo": "{\"ModelDirectives\":{\"BaseModel\":{\"Name\":\"Banking\",\"Version\":\"0.1.0\"}}}"
+		},
+		"Source": {
+			"Provider": "ADLS",
+			"Location": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database4",
+			"Properties": {
+				"FormatType": "csv",
+				"LinkedServiceName": "sathishsynapse-WorkspaceDefaultStorage"
+			}
+		}
+	},
+	"type": "DATABASE"
+}
