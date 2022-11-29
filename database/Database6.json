@@ -1,0 +1,22 @@
+{
+	"name": "Database6",
+	"properties": {
+		"Name": "Database6",
+		"EntityType": "DATABASE",
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"Properties": {
+			"IsSyMSCDMDatabase": true
+		},
+		"Source": {
+			"Provider": "ADLS",
+			"Location": "abfss://synapsefolder@sathishstoragesftp.dfs.core.windows.net/Database6",
+			"Properties": {
+				"FormatType": "csv",
+				"LinkedServiceName": "sathishsynapse-WorkspaceDefaultStorage"
+			}
+		}
+	},
+	"type": "DATABASE"
+}
